@@ -17,7 +17,7 @@
  **********GLOBAL VARIABLE ***********
  *************************************/
 uint8_t split;
-List <int> list; //creates the new vector 
+List <int> test_set; //creates the new vector 
 extern float training_set[rows][cols];
 uint8_t random_test (uint8_t test, uint8_t lim);
 void array_test_set ();
@@ -33,10 +33,10 @@ void split_set (float value){
   split=round(rows*value);
   randomSeed(39); 
   // randomly selection to add in test set vector
-  list.Insert(0,0);
+  test_set.Insert(0,0);
   for(i=0;i<split;i++){
         aux=random_test(random(1,rows-1),list.Count());
-        list.Insert(i,aux);
+        test_set.Insert(i,aux);
     }
 Serial.println("Done..!");     
 }
@@ -47,13 +47,13 @@ Serial.println("Done..!");
 uint8_t random_test (uint8_t test, uint8_t lim){
   uint8_t j=0,k=0;
   for(j=0;j<lim;j++){
-    if(test!=list[j])
+    if(test!=test_set[j])
        k++;
     }
-   if(k==list.Count())
+   if(k==test_set.Count())
       return test;
    else
-       random_test(random(1,rows-1),list.Count());
+       random_test(random(1,rows-1),test_set.Count());
   k=0;  
 }
 /*
@@ -77,17 +77,12 @@ uint8_t classifier (uint8_t k, float *input){
   |0.1|0.2|0.3| -> distance
   */
  float matrix_k [3][k];
-
-
- 
   /* labels
   |1|2|3| -> put the labels into a matrix
   |2|1|0| -> at the end ww storage the number of labels of each label
    */
  int matrix_labels[2][labels];
 
-
- 
   // fill in with zeros
 
    for(;i<k;i++){
@@ -102,8 +97,6 @@ uint8_t classifier (uint8_t k, float *input){
 
      
     }
-
-    
    // fill in with labels
    for(i=0;i<labels;i++){
     matrix_labels[0][i]=i+1;
@@ -113,13 +106,12 @@ uint8_t classifier (uint8_t k, float *input){
      |0|0|0|
      */
     }
-
 // k cycle
 for(;rep<k;rep++){
    for(fil=0;fil<rows;fil++){
        for(i=0;i<split;i++){
-            if(fil==list[i])
-              var=list[i];
+            if(fil==test_set[i])
+              var=test_set[i];
           }
       if(fil==var)
         continue;
@@ -182,7 +174,7 @@ float accurancy_knn (uint8_t k){
       vector[j]=training_set[list[i]][j];
       }
     out=classifier(k,&vector[0]);
-    if(out==(int)training_set[list[i]][cols-1]){
+    if(out==(int)training_set[test_set[i]][cols-1]){
       accurancy++;
       }
     } 
