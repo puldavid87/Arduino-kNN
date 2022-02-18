@@ -174,7 +174,7 @@ float accurancy_knn (uint8_t k){
       vector[j]=training_set[list[i]][j];
       }
     out=classifier(k,&vector[0]);
-    if(out==(int)training_set[test_set[i]][cols-1]){
+    if(out==(int)training_set[test_set[i][cols-1]]){
       accurancy++;
       }
     } 
